@@ -21,11 +21,9 @@ export default function HomeScreen({ navigation }) {
     return unsubscribe;
   }, [navigation]);
 
-  // Salvar tarefas quando mudarem
+  // Salvar tarefas quando mudarem (incluindo quando ficar vazio)
   useEffect(() => {
-    if (tasks.length > 0) {
-      saveTasks();
-    }
+    saveTasks();
   }, [tasks]);
 
   async function loadTasks() {
@@ -61,9 +59,22 @@ export default function HomeScreen({ navigation }) {
         {
           text: 'Remover',
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
+            // Remover da lista de tarefas
             const newTasks = tasks.filter((_, i) => i !== index);
             setTasks(newTasks);
+
+            // Remover dos favoritos também (se estiver favoritada)
+            const updatedFavorites = favorites.filter(fav => fav.index !== index);
+            
+            // Reindexar favoritos (ajustar índices após remoção)
+            const reindexedFavorites = updatedFavorites.map(fav => ({
+              ...fav,
+              index: fav.index > index ? fav.index - 1 : fav.index
+            }));
+            
+            setFavorites(reindexedFavorites);
+            await saveItem('favorites', reindexedFavorites);
           }
         }
       ]
@@ -115,6 +126,7 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => (
           <View style={styles.taskCard}>
+            {/* Card agora apenas mostra detalhes, não edita */}
             <TouchableOpacity
               style={styles.taskContent}
               onPress={() => navigation.navigate('TaskDetail', { task: item, index })}
@@ -122,12 +134,13 @@ export default function HomeScreen({ navigation }) {
             >
               <Text style={styles.taskText}>{item.text || item}</Text>
               
-              {/* CORRIGIDO: Ações agora estão visíveis */}
               <View style={styles.taskActions}>
-                <Text style={styles.taskHint}>Toque longo: remover</Text>
+                <Text style={styles.taskHint}>Toque: ver detalhes • Longo: remover</Text>
+                {/* Botão de editar separado */}
                 <TouchableOpacity
+                  style={styles.editButton}
                   onPress={(e) => {
-                    e.stopPropagation(); // Evita abrir detalhes
+                    e.stopPropagation();
                     navigation.navigate('EditarPost', { task: item, index });
                   }}
                 >
@@ -245,13 +258,19 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#999',
     fontStyle: 'italic',
+    flex: 1,
+  },
+  editButton: {
+    backgroundColor: '#FF9800',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginLeft: 8,
   },
   editText: {
-    fontSize: 13,
-    color: '#FF9800',
+    fontSize: 12,
+    color: '#fff',
     fontWeight: 'bold',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
   },
   favoriteButton: {
     width: 60,

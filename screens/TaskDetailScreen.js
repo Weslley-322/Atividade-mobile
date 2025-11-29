@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 export default function TaskDetailScreen({ route, navigation }) {
   const { task, index } = route.params;
   
-  // Suporte para formato antigo (string) e novo (objeto)
   const taskText = task.text || task;
   const createdAt = task.createdAt 
     ? new Date(task.createdAt).toLocaleString('pt-BR') 
@@ -12,13 +11,6 @@ export default function TaskDetailScreen({ route, navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.backButtonText}>← Voltar</Text>
-      </TouchableOpacity>
-
       <View style={styles.card}>
         <Text style={styles.label}>📋 Tarefa #{index + 1}</Text>
         
@@ -42,6 +34,14 @@ export default function TaskDetailScreen({ route, navigation }) {
           </Text>
         </View>
       </View>
+
+      {/* Botão de voltar no centro */}
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Text style={styles.backButtonText}>← Voltar</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -50,20 +50,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-  },
-  backButton: {
-    margin: 20,
-    marginTop: 60,
-  },
-  backButtonText: {
-    color: '#2196F3',
-    fontSize: 16,
-    fontWeight: 'bold',
+    paddingTop: 60,
   },
   card: {
     backgroundColor: '#fff',
     margin: 20,
-    marginTop: 0,
     padding: 20,
     borderRadius: 16,
     shadowColor: '#000',
@@ -103,5 +94,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#666',
     marginBottom: 6,
+  },
+  backButton: {
+    backgroundColor: '#2196F3',
+    margin: 20,
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  backButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

@@ -34,18 +34,17 @@ export default function EditarPostScreen({ route, navigation }) {
       return;
     }
 
-    // Simular requisição PUT (JSONPlaceholder sempre retorna sucesso)
     const updatedTask = {
       text: taskText,
       createdAt: originalTask.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    // Fazer requisição PUT para API (simulação)
+    // Fazer requisição PUT para API
     const result = await request('PUT', `/posts/${index + 1}`, updatedTask);
 
     if (result.success) {
-      // Salvar no AsyncStorage
+      // Salvar no AsyncStorage somente se PUT foi bem-sucedido
       await updateTaskInStorage(updatedTask);
       
       Alert.alert(
@@ -108,7 +107,10 @@ export default function EditarPostScreen({ route, navigation }) {
       </TouchableOpacity>
 
       <View style={styles.content}>
-        <Text style={styles.title}>✏️ Editar Tarefa</Text>
+        <View style={styles.headerSection}>
+          <Text style={styles.icon}>✏️</Text>
+          <Text style={styles.title}>Editar Tarefa</Text>
+        </View>
         
         <View style={styles.infoCard}>
           <Text style={styles.infoLabel}>📋 Tarefa #{index + 1}</Text>
@@ -170,12 +172,18 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
+  headerSection: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  icon: {
+    fontSize: 48,
+    marginBottom: 10,
+  },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 20,
-    textAlign: 'center',
   },
   infoCard: {
     backgroundColor: '#fff',
@@ -201,9 +209,9 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#555',
     marginBottom: 10,
   },
   input: {
@@ -227,17 +235,20 @@ const styles = StyleSheet.create({
     padding: 18,
     borderRadius: 12,
     marginBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
   },
   updateButtonText: {
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 17,
   },
   cancelButton: {
     padding: 15,

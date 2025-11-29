@@ -8,7 +8,6 @@ export const api = axios.create({
   }
 });
 
-// Interceptor para log de requisições (desenvolvimento)
 api.interceptors.request.use(
   config => {
     console.log(`📤 ${config.method.toUpperCase()} ${config.url}`);
@@ -19,7 +18,6 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para tratamento de erros
 api.interceptors.response.use(
   response => {
     console.log(`✅ ${response.config.method.toUpperCase()} ${response.config.url} - ${response.status}`);

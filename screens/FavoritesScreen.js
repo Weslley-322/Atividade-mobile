@@ -74,12 +74,15 @@ export default function FavoritesScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButtonHeader}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonHeaderText}>← Voltar</Text>
-        </TouchableOpacity>
+        {/* Botão do topo APENAS se tiver favoritos */}
+        {favorites.length > 0 && (
+          <TouchableOpacity 
+            style={styles.backButtonHeader}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={styles.backButtonHeaderText}>← Voltar</Text>
+          </TouchableOpacity>
+        )}
         
         <Text style={styles.title}>⭐ Minhas Tarefas Favoritas</Text>
         
@@ -100,6 +103,7 @@ export default function FavoritesScreen({ navigation }) {
           <Text style={styles.emptySubtext}>
             Favorite tarefas na tela principal para vê-las aqui!
           </Text>
+          {/* Botão central quando vazio */}
           <TouchableOpacity 
             style={styles.backButton}
             onPress={() => navigation.goBack()}
